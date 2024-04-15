@@ -22,8 +22,6 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-ext.kotlin_version = '1.9.23'
-
 android {
     namespace "com.example.jounerney"
     compileSdk flutter.compileSdkVersion

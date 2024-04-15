@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
@@ -12,7 +14,10 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   Location _locationController = new Location();
 
-  static const LatLng _pGooglePlex = LatLng(-7.1541165, -78.5075873);
+  final Completer<GoogleMapController> _mapController =
+      Completer<GoogleMapController>();
+
+  static const LatLng _pGooglePlex = LatLng(-7.1518979, -78.5072211);
   LatLng? _currentPos;
 
   @override
@@ -24,16 +29,63 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        initialCameraPosition:
-            const CameraPosition(target: _pGooglePlex, zoom: 14),
-        markers: {
-          const Marker(
-              markerId: MarkerId("_currentLocation"),
-              icon: BitmapDescriptor.defaultMarker,
-              position: _pGooglePlex)
-        },
+      appBar: AppBar(
+        title: const Text('Journey'),
+        leading: Builder(
+          builder: (context) => IconButton(
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              icon: const Icon(
+                Icons.menu_rounded,
+                size: 32,
+              )),
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.account_circle_rounded, size: 48))
+        ],
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: const [
+            DrawerHeader(
+                decoration: BoxDecoration(color: Colors.blue),
+                child: Text('Draw header'))
+          ],
+        ),
+      ),
+      body: _currentPos == null
+          ? const Center(
+              child: Text("Loading..."),
+            )
+          : GoogleMap(
+              initialCameraPosition:
+                  const CameraPosition(target: _pGooglePlex, zoom: 18),
+              markers: {
+                Marker(
+                    markerId: const MarkerId("_currentLocation"),
+                    icon: BitmapDescriptor.defaultMarker,
+                    position: _currentPos!),
+                const Marker(
+                    markerId: MarkerId("_destLocation"),
+                    icon: BitmapDescriptor.defaultMarker,
+                    position: _pGooglePlex)
+              },
+            ),
+    );
+  }
+
+  Future<void> _cameraToPosition(LatLng pos) async {
+    final GoogleMapController controller = await _mapController.future;
+    CameraPosition newCameraPosition = CameraPosition(
+      target: pos,
+      zoom: 13,
+    );
+    await controller.animateCamera(
+      CameraUpdate.newCameraPosition(newCameraPosition),
     );
   }
 
@@ -65,8 +117,11 @@ class _MapPageState extends State<MapPage> {
         setState(() {
           _currentPos =
               LatLng(currentLocation.latitude!, currentLocation.longitude!);
+          _cameraToPosition(_currentPos!);
         });
       }
     });
   }
+
+  void openDrawer() {}
 }
