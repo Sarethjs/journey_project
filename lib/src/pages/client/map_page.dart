@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:jounerney/src/pages/client/home_drawer.dart';
 import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
@@ -29,44 +28,19 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Journey'),
-        leading: Builder(
-          builder: (context) => IconButton(
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              icon: const Icon(
-                Icons.menu_rounded,
-                size: 32,
-              )),
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.account_circle_rounded, size: 48))
-        ],
-      ),
-      drawer: const HomeDrawer(),
-      body: _currentPos == null
-          ? const Center(
-              child: Text("Loading..."),
-            )
-          : GoogleMap(
-              initialCameraPosition:
-                  const CameraPosition(target: _pGooglePlex, zoom: 18),
-              markers: {
-                Marker(
-                    markerId: const MarkerId("_currentLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _currentPos!),
-                const Marker(
-                    markerId: MarkerId("_destLocation"),
-                    icon: BitmapDescriptor.defaultMarker,
-                    position: _pGooglePlex)
-              },
-            ),
+    return GoogleMap(
+      initialCameraPosition:
+          const CameraPosition(target: _pGooglePlex, zoom: 18),
+      markers: {
+        Marker(
+            markerId: const MarkerId("_currentLocation"),
+            icon: BitmapDescriptor.defaultMarker,
+            position: _currentPos ?? _pGooglePlex),
+        const Marker(
+            markerId: MarkerId("_destLocation"),
+            icon: BitmapDescriptor.defaultMarker,
+            position: _pGooglePlex)
+      },
     );
   }
 

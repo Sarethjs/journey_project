@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jounerney/src/pages/client/map_page.dart';
+import 'package:jounerney/src/pages/client/home_screen.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MapPage(),
+      home: HomeClient(),
     );
   }
 }
