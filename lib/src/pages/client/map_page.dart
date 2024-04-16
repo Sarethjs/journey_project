@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:jounerney/src/pages/client/home_drawer.dart';
 import 'package:location/location.dart';
 
 class MapPage extends StatefulWidget {
@@ -12,7 +13,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
-  Location _locationController = new Location();
+  final Location _locationController = Location();
 
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -47,16 +48,7 @@ class _MapPageState extends State<MapPage> {
               icon: const Icon(Icons.account_circle_rounded, size: 48))
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: const [
-            DrawerHeader(
-                decoration: BoxDecoration(color: Colors.blue),
-                child: Text('Draw header'))
-          ],
-        ),
-      ),
+      drawer: const HomeDrawer(),
       body: _currentPos == null
           ? const Center(
               child: Text("Loading..."),
@@ -122,6 +114,4 @@ class _MapPageState extends State<MapPage> {
       }
     });
   }
-
-  void openDrawer() {}
 }
